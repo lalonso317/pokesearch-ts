@@ -1,24 +1,30 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
+import { pokeApi, Pokemon } from './apis/pokemon';
+import { SearchBar } from './components/searchBar';
+import  SearchResults from './components/searchResults'
+
 
 const App: React.FC = () => {
+
+  const [pokemon, setPokemon] = React.useState<Pokemon | undefined | null>(undefined)
+
+ 
+  const searchForPokemon = async (pokemon: string)=>{
+    try{
+      const response = await pokeApi.getPokemone(pokemon)
+      setPokemon(response.data)
+    }
+    catch{
+      setPokemon(null)
+    }
+   
+  }
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+       <SearchBar  onSearch={searchForPokemon}/>
+        <SearchResults pokemon={pokemon}/>
     </div>
   );
 }
